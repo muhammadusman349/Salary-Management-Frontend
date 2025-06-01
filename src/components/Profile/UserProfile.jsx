@@ -9,7 +9,10 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
+  Typography,
+  IconButton
 } from '@mui/material';
+import { CameraAlt as CameraIcon } from '@mui/icons-material';
 import { getUserProfile, updateUserProfile } from '../../api/auth';
 
 const UserProfileForm = () => {
@@ -96,7 +99,6 @@ const UserProfileForm = () => {
           severity: 'success',
         });
 
-        // Force page reload after 1.5 seconds (let user see the success message)
         setTimeout(() => {
           window.location.reload();
         }, 1500);
@@ -135,74 +137,118 @@ const UserProfileForm = () => {
   }
 
   return (
-    <Box sx={{ maxWidth: 600, mx: 'auto', p: 3 }}>
+    <Box sx={{ maxWidth: 800, mx: 'auto', p: 3 }}>
       <Box
         component="form"
         onSubmit={formik.handleSubmit}
-        sx={{ mt: 3 }}
         encType="multipart/form-data"
       >
-        <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
-          <Avatar
-            src={profilePicPreview}
-            sx={{ width: 120, height: 120, mb: 2 }}
-          />
-          <Button variant="contained" component="label">
-            {profilePicFile ? 'Change Profile Picture' : 'Upload Profile Picture'}
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={(e) => {
-                const file = e.currentTarget.files[0];
-                if (file) {
-                  setProfilePicFile(file);
-                  setProfilePicPreview(URL.createObjectURL(file));
-                }
+        <Box 
+          display="flex" 
+          flexDirection={{ xs: 'column', md: 'row' }} 
+          alignItems="center" 
+          gap={4}
+          mb={4}
+        >
+          <Box position="relative">
+            <Avatar
+              src={profilePicPreview}
+              sx={{ 
+                width: 150, 
+                height: 150, 
+                border: '3px solid',
+                borderColor: 'primary.main'
               }}
             />
-          </Button>
-        </Box>
+            <IconButton
+              component="label"
+              sx={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                bgcolor: 'primary.main',
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'primary.dark'
+                }
+              }}
+            >
+              <CameraIcon />
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => {
+                  const file = e.currentTarget.files[0];
+                  if (file) {
+                    setProfilePicFile(file);
+                    setProfilePicPreview(URL.createObjectURL(file));
+                  }
+                }}
+              />
+            </IconButton>
+          </Box>
 
-        <TextField
-          fullWidth
-          label="First Name"
-          {...formik.getFieldProps('first_name')}
-          error={formik.touched.first_name && Boolean(formik.errors.first_name)}
-          helperText={formik.touched.first_name && formik.errors.first_name}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Last Name"
-          {...formik.getFieldProps('last_name')}
-          error={formik.touched.last_name && Boolean(formik.errors.last_name)}
-          helperText={formik.touched.last_name && formik.errors.last_name}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Email"
-          {...formik.getFieldProps('email')}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Phone"
-          {...formik.getFieldProps('phone')}
-          error={formik.touched.phone && Boolean(formik.errors.phone)}
-          helperText={formik.touched.phone && formik.errors.phone}
-          margin="normal"
-        />
+          <Box flex={1} width="100%">
+            <Typography variant="h6" gutterBottom>
+              Personal Information
+            </Typography>
+            
+            <Box display="flex" gap={2}>
+              <TextField
+                fullWidth
+                label="First Name"
+                {...formik.getFieldProps('first_name')}
+                error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+                helperText={formik.touched.first_name && formik.errors.first_name}
+                margin="normal"
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Last Name"
+                {...formik.getFieldProps('last_name')}
+                error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+                helperText={formik.touched.last_name && formik.errors.last_name}
+                margin="normal"
+                sx={{ mb: 2 }}
+              />
+            </Box>
+
+            <TextField
+              fullWidth
+              label="Email"
+              {...formik.getFieldProps('email')}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+              margin="normal"
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Phone"
+              {...formik.getFieldProps('phone')}
+              error={formik.touched.phone && Boolean(formik.errors.phone)}
+              helperText={formik.touched.phone && formik.errors.phone}
+              margin="normal"
+              sx={{ mb: 2 }}
+            />
+          </Box>
+        </Box>
 
         <Button
           type="submit"
           variant="contained"
-          color="primary"
+          size="large"
           fullWidth
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ 
+            mt: 3,
+            py: 1.5,
+            fontSize: '1rem',
+            fontWeight: 600,
+            borderRadius: 1,
+            textTransform: 'none'
+          }}
           disabled={formik.isSubmitting}
         >
           {formik.isSubmitting ? (
@@ -223,6 +269,7 @@ const UserProfileForm = () => {
           onClose={handleCloseSnackbar}
           severity={snackbar.severity}
           sx={{ width: '100%' }}
+          variant="filled"
         >
           {snackbar.message}
         </Alert>

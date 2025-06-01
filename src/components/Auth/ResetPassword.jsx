@@ -1,4 +1,3 @@
-// src/components/Auth/ResetPassword.jsx
 import { 
   TextField,
   Button,
@@ -57,31 +56,45 @@ const ResetPassword = ({ email }) => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} noValidate>
+    <Box sx={{ width: '100%' }}>
       {!email && (
         <TextField
           fullWidth
           margin="normal"
-          label="Email"
+          label="Email Address"
           name="email"
+          type="email"
           value={formData.email}
           onChange={handleChange}
           required
           error={Boolean(errors.email)}
           helperText={errors.email}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 1,
+            }
+          }}
+          inputProps={{
+            autoComplete: 'email'
+          }}
         />
       )}
       
       <TextField
         fullWidth
         margin="normal"
-        label="OTP"
+        label="OTP Code"
         name="otp"
         value={formData.otp}
         onChange={handleChange}
         required
         error={Boolean(errors.otp)}
-        helperText={errors.otp}
+        helperText={errors.otp || 'Enter the 6-digit code sent to your email'}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1,
+          }
+        }}
       />
       
       <TextField
@@ -90,11 +103,19 @@ const ResetPassword = ({ email }) => {
         label="New Password"
         name="password"
         type="password"
-        value={formData.new_password}
+        value={formData.password}
         onChange={handleChange}
         required
-        error={Boolean(errors.new_password)}
-        helperText={errors.new_password}
+        error={Boolean(errors.password)}
+        helperText={errors.password}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1,
+          }
+        }}
+        inputProps={{
+          autoComplete: 'new-password'
+        }}
       />
 
       <TextField
@@ -108,16 +129,32 @@ const ResetPassword = ({ email }) => {
         required
         error={Boolean(errors.confirm_password)}
         helperText={errors.confirm_password}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1,
+          }
+        }}
+        inputProps={{
+          autoComplete: 'new-password'
+        }}
       />
       
       {success && (
-        <Alert severity="success" sx={{ mt: 2 }}>
+        <Alert 
+          severity="success" 
+          sx={{ 
+            mt: 3,
+            '& .MuiAlert-message': {
+              width: '100%'
+            }
+          }}
+        >
           Password reset successfully! Redirecting to login...
         </Alert>
       )}
       
       {errors.detail && (
-        <Alert severity="error" sx={{ mt: 2 }}>
+        <Alert severity="error" sx={{ mt: 3 }}>
           {errors.detail}
         </Alert>
       )}
@@ -126,10 +163,17 @@ const ResetPassword = ({ email }) => {
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2 }}
+        sx={{ 
+          mt: 3,
+          py: 1.5,
+          fontSize: '1rem',
+          fontWeight: 600,
+          borderRadius: 1,
+          textTransform: 'none'
+        }}
         disabled={loading}
       >
-        {loading ? <CircularProgress size={24} /> : 'Reset Password'}
+        {loading ? <CircularProgress size={24} color="inherit" /> : 'Reset Password'}
       </Button>
     </Box>
   );

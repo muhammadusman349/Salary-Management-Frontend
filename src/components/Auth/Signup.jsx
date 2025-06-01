@@ -5,12 +5,21 @@ import {
   Button,
   Box,
   Typography,
+  Alert,
+  CircularProgress,
+  InputAdornment,
+  IconButton,
+  Grid
 } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { signup } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const SignupForm = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -38,87 +47,161 @@ const SignupForm = () => {
         .min(10, 'Phone number must be at least 10 digits')
         .required('Phone number is required')
     }),
-    onSubmit: async (values, { setSubmitting, setErrors }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       try {
-        // Always sign up as EMPLOYEE
+        setError(null);
         const dataToSend = {
           ...values,
           role: 'EMPLOYEE',
         };
-
         await signup(dataToSend);
-        navigate('/login');
+        navigate('/login', { state: { successMessage: 'Registration successful! Please login.' } });
       } catch (error) {
         const errMsg =
           error.response?.data?.error ||
           JSON.stringify(error.response?.data) ||
-          'Signup failed';
-        setErrors({ submit: errMsg });
+          'Signup failed. Please try again.';
+        setError(errMsg);
       } finally {
         setSubmitting(false);
       }
     },
   });
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 3 }}>
+    <Box 
+      component="form" 
+      onSubmit={formik.handleSubmit} 
+      sx={{ 
+        width: '100%',
+        mt: 3
+      }}
+    >
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="First Name"
+            {...formik.getFieldProps('first_name')}
+            error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+            helperText={formik.touched.first_name && formik.errors.first_name}
+            margin="normal"
+            autoComplete="given-name"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 1,
+              }
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Last Name"
+            {...formik.getFieldProps('last_name')}
+            error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+            helperText={formik.touched.last_name && formik.errors.last_name}
+            margin="normal"
+            autoComplete="family-name"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 1,
+              }
+            }}
+          />
+        </Grid>
+      </Grid>
+
       <TextField
         fullWidth
-        label="First Name"
-        {...formik.getFieldProps('first_name')}
-        error={formik.touched.first_name && Boolean(formik.errors.first_name)}
-        helperText={formik.touched.first_name && formik.errors.first_name}
-        margin="normal"
-      />
-      <TextField
-        fullWidth
-        label="Last Name"
-        {...formik.getFieldProps('last_name')}
-        error={formik.touched.last_name && Boolean(formik.errors.last_name)}
-        helperText={formik.touched.last_name && formik.errors.last_name}
-        margin="normal"
-      />
-      <TextField
-        fullWidth
-        label="Email"
+        label="Email Address"
         type="email"
         {...formik.getFieldProps('email')}
         error={formik.touched.email && Boolean(formik.errors.email)}
         helperText={formik.touched.email && formik.errors.email}
         margin="normal"
+        autoComplete="email"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1,
+          }
+        }}
       />
+
       <TextField
         fullWidth
         label="Password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         {...formik.getFieldProps('password')}
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
         margin="normal"
+        autoComplete="new-password"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1,
+          }
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
       />
+
       <TextField
         fullWidth
-        label="Phone"
+        label="Phone Number"
         {...formik.getFieldProps('phone')}
         error={formik.touched.phone && Boolean(formik.errors.phone)}
         helperText={formik.touched.phone && formik.errors.phone}
         margin="normal"
+        autoComplete="tel"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1,
+          }
+        }}
       />
-
-      {formik.errors.submit && (
-        <Typography color="error" variant="body2" sx={{ mt: 2 }}>
-          {formik.errors.submit}
-        </Typography>
-      )}
 
       <Button
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2 }}
+        size="large"
+        sx={{ 
+          mt: 3,
+          py: 1.5,
+          fontSize: '1rem',
+          fontWeight: 600,
+          borderRadius: 1,
+          textTransform: 'none'
+        }}
         disabled={formik.isSubmitting}
       >
-        Sign Up
+        {formik.isSubmitting ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          'Create Account'
+        )}
       </Button>
     </Box>
   );

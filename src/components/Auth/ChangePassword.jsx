@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { 
-  Container,
-  Paper,
-  Typography,
   TextField,
   Button,
   Box,
-  Alert
+  Alert,
+  Typography,
+  CircularProgress
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/axios'; // Import your axios instance
+import api from '../../api/axios';
 
 const ChangePassword = () => {
     const [formData, setFormData] = useState({
@@ -52,76 +51,133 @@ const ChangePassword = () => {
     };
 
     return (
-        <Container maxWidth="sm" sx={{ mt: 4 }}>
-            <Paper elevation={3} sx={{ p: 4 }}>
-                <Typography variant="h4" component="h1" gutterBottom align="center">
-                    Change Password
-                </Typography>
+        <Box sx={{ width: '100%' }}>
+            <Typography 
+                variant="h5" 
+                component="h2" 
+                gutterBottom 
+                align="center"
+                sx={{ 
+                    mb: 3,
+                    color: 'text.secondary',
+                    fontWeight: 500
+                }}
+            >
+                Update your password
+            </Typography>
+            
+            {success && (
+                <Alert 
+                    severity="success" 
+                    sx={{ 
+                        mb: 3,
+                        '& .MuiAlert-message': {
+                            width: '100%'
+                        }
+                    }}
+                >
+                    <Typography variant="body1">
+                        Password changed successfully! Redirecting to profile...
+                    </Typography>
+                </Alert>
+            )}
+            
+            {errors.detail && (
+                <Alert severity="error" sx={{ mb: 3 }}>
+                    {errors.detail}
+                </Alert>
+            )}
+            
+            <Box 
+                component="form" 
+                onSubmit={handleSubmit}
+                sx={{ mt: 1 }}
+            >
+                <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Current Password"
+                    name="old_password"
+                    type="password"
+                    value={formData.old_password}
+                    onChange={handleChange}
+                    required
+                    error={Boolean(errors.old_password)}
+                    helperText={errors.old_password}
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            borderRadius: 1,
+                        }
+                    }}
+                    inputProps={{
+                        autoComplete: 'current-password'
+                    }}
+                />
                 
-                {success && (
-                    <Alert severity="success" sx={{ mb: 3 }}>
-                        Password changed successfully!
-                    </Alert>
-                )}
-                
-                {errors.detail && (
-                    <Alert severity="error" sx={{ mb: 3 }}>
-                        {errors.detail}
-                    </Alert>
-                )}
-                
-                <Box component="form" onSubmit={handleSubmit}>
-                    <TextField
-                        fullWidth
-                        margin="normal"
-                        label="Current Password"
-                        name="old_password"
-                        type="password"
-                        value={formData.old_password}
-                        onChange={handleChange}
-                        required
-                        error={Boolean(errors.old_password)}
-                        helperText={errors.old_password}
-                    />
-                    
-                    <TextField
-                        fullWidth
-                        margin="normal"
-                        label="New Password"
-                        name="new_password"
-                        type="password"
-                        value={formData.new_password}
-                        onChange={handleChange}
-                        required
-                        error={Boolean(errors.new_password)}
-                        helperText={errors.new_password}
-                    />
+                <TextField
+                    fullWidth
+                    margin="normal"
+                    label="New Password"
+                    name="new_password"
+                    type="password"
+                    value={formData.new_password}
+                    onChange={handleChange}
+                    required
+                    error={Boolean(errors.new_password)}
+                    helperText={errors.new_password}
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            borderRadius: 1,
+                        }
+                    }}
+                    inputProps={{
+                        autoComplete: 'new-password'
+                    }}
+                />
 
-                    <TextField
-                        fullWidth
-                        margin="normal"
-                        label="Confirm New Password"
-                        name="confirm_password"
-                        type="password"
-                        value={formData.confirm_password}
-                        onChange={handleChange}
-                        required
-                        error={Boolean(errors.confirm_password)}
-                        helperText={errors.confirm_password}
-                    />
-                    
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3 }}
-                        disabled={loading}
-                    >
-                        {loading ? 'Changing...' : 'Change Password'}
-                    </Button>
-                </Box>
-            </Paper>
-        </Container>
+                <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Confirm New Password"
+                    name="confirm_password"
+                    type="password"
+                    value={formData.confirm_password}
+                    onChange={handleChange}
+                    required
+                    error={Boolean(errors.confirm_password)}
+                    helperText={errors.confirm_password}
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            borderRadius: 1,
+                        }
+                    }}
+                    inputProps={{
+                        autoComplete: 'new-password'
+                    }}
+                />
+                
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ 
+                        mt: 3,
+                        py: 1.5,
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        borderRadius: 1,
+                        textTransform: 'none'
+                    }}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                    ) : (
+                        'Change Password'
+                    )}
+                </Button>
+            </Box>
+        </Box>
     );
 };
 

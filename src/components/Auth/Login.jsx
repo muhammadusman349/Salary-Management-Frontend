@@ -1,11 +1,24 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { 
+  TextField, 
+  Button, 
+  Box, 
+  Typography,
+  Alert,
+  CircularProgress,
+  InputAdornment,
+  IconButton
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { login } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -13,61 +26,119 @@ const LoginForm = () => {
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string().required('Required'),
+      email: Yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
+      password: Yup.string()
+        .required('Password is required')
+        .min(8, 'Password must be at least 8 characters'),
     }),
-    onSubmit: async (values, { setSubmitting, setErrors }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       try {
+        setError(null);
         const response = await login(values);
         localStorage.setItem('access_token', response.access_token);
         localStorage.setItem('refresh_token', response.refresh_token);
-        navigate('/profile');
-      } catch (error) {
-        setErrors({ submit: error.error || 'Login failed' });
+        navigate('/');
+      } catch (err) {
+        setError(err.message || 'Login failed. Please check your credentials.');
       } finally {
         setSubmitting(false);
       }
     },
   });
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 3 }}>
+    <Box 
+      component="form" 
+      onSubmit={formik.handleSubmit} 
+      sx={{ 
+        width: '100%',
+        mt: 3
+      }}
+    >
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
+
       <TextField
         fullWidth
         id="email"
         name="email"
-        label="Email"
+        label="Email Address"
         value={formik.values.email}
         onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
         error={formik.touched.email && Boolean(formik.errors.email)}
         helperText={formik.touched.email && formik.errors.email}
         margin="normal"
+        autoComplete="email"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1,
+          }
+        }}
       />
+
       <TextField
         fullWidth
         id="password"
         name="password"
         label="Password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         value={formik.values.password}
         onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
         margin="normal"
+        autoComplete="current-password"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1,
+          }
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
       />
-      {formik.errors.submit && (
-        <Typography color="error" variant="body2">
-          {formik.errors.submit}
-        </Typography>
-      )}
+
       <Button
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2 }}
+        size="large"
+        sx={{ 
+          mt: 3,
+          py: 1.5,
+          fontSize: '1rem',
+          fontWeight: 600,
+          borderRadius: 1,
+          textTransform: 'none'
+        }}
         disabled={formik.isSubmitting}
       >
-        Sign In
+        {formik.isSubmitting ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          'Sign In'
+        )}
       </Button>
     </Box>
   );
