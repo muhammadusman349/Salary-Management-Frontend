@@ -3,7 +3,7 @@ import HomePage from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
-import ChangePasswordPage from './pages/ChangePasswordPage'; // Fixed naming
+import ChangePasswordPage from './pages/ChangePasswordPage';
 import ForgetPasswordPage from './pages/ForgetPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import Navbar from './components/Layout/Navbar';
@@ -31,7 +31,7 @@ function App() {
           path="/change-password"
           element={
             <PrivateRoute>
-              <ChangePasswordPage /> {/* Fixed component name */}
+              <ChangePasswordPage />
             </PrivateRoute>
           }
         />
