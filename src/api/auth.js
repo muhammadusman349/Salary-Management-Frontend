@@ -34,6 +34,40 @@ export const updateUserProfile = async (formData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return response.data;x
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const forgetPassword = async (email) => {
+  try {
+    const response = await api.post('forget/password/', { email });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const resetPassword = async ({ email, otp, password }) => {
+  try {
+    const response = await api.post('reset/password/', { 
+      email, 
+      otp, 
+      password 
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const changePassword = async ({ old_password, new_password }) => {
+  try {
+    const response = await api.post('changepassword/', { 
+      old_password, 
+      new_password 
+    });
     return response.data;
   } catch (error) {
     throw error.response.data;

@@ -1,4 +1,5 @@
-import { Container, Paper, Typography } from '@mui/material';
+import { Container, Paper, Typography, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import LoginForm from '../components/Auth/Login';
 
 const LoginPage = () => {
@@ -9,6 +10,11 @@ const LoginPage = () => {
           Login
         </Typography>
         <LoginForm />
+        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          <Link component={RouterLink} to="/forget-password">
+            Forgot Password?
+          </Link>
+        </Typography>
       </Paper>
     </Container>
   );
