@@ -7,7 +7,7 @@ import {
   Typography
 } from '@mui/material';
 import { useState } from 'react';
-import api from '../../api/axios';
+import {accountsApi} from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 
 const ResetPassword = ({ email }) => {
@@ -35,7 +35,7 @@ const ResetPassword = ({ email }) => {
     setErrors({});
     
     try {
-      await api.post('reset/password/', formData);
+      await accountsApi.post('reset/password/', formData);
       setSuccess(true);
       setTimeout(() => {
         navigate('/login', { 

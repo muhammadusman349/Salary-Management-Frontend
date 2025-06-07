@@ -8,7 +8,7 @@ import {
   CircularProgress
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/axios';
+import {accountsApi} from '../../api/axios';
 
 const ChangePassword = () => {
     const [formData, setFormData] = useState({
@@ -34,7 +34,7 @@ const ChangePassword = () => {
         setErrors({});
         
         try {
-            await api.post('changepassword/', formData);
+            await accountsApi.post('changepassword/', formData);
             setSuccess(true);
             setTimeout(() => {
                 navigate('/profile');

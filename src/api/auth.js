@@ -1,4 +1,4 @@
-import api from './axios';
+import {accountsApi as api} from './axios';
 
 export const login = async (credentials) => {
   try {
@@ -72,4 +72,8 @@ export const changePassword = async ({ old_password, new_password }) => {
   } catch (error) {
     throw error.response.data;
   }
+};
+
+export const UserService = {
+  getUsers: async () => api.get('/users/'),
 };

@@ -8,7 +8,7 @@ import {
   CircularProgress
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/axios';
+import { accountsApi } from '../../api/axios';
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ const ForgetPassword = () => {
         setErrors({});
         
         try {
-            await api.post('forget/password/', { email });
+            await accountsApi.post('forget/password/', { email });
             setSuccess(true);
         } catch (error) {
             if (error.response?.data) {
