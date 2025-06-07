@@ -8,6 +8,10 @@ import ForgetPasswordPage from './pages/ForgetPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import Navbar from './components/Layout/Navbar';
 import PrivateRoute from './components/Layout/PrivateRoute';
+import DepartmentPage from './pages/DepartmentPage';
+import PositionPage from './pages/PositionPage';
+import PositionDetail from './components/Employee/PositionDetail';
+import DepartmentDetail from './components/Employee/DepartmentDetail';
 
 function App() {
   return (
@@ -19,22 +23,16 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <ProfilePage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/change-password"
-          element={
-            <PrivateRoute>
-              <ChangePasswordPage />
-            </PrivateRoute>
-          }
-        />
+        
+        {/* Protected routes */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
+          <Route path="/departments" element={<DepartmentPage />} />
+          <Route path="/departments/:id" element={<DepartmentDetail />} />
+          <Route path="/positions" element={<PositionPage />} />
+          <Route path="/positions/:id" element={<PositionDetail />} />
+        </Route>
       </Routes>
     </div>
   );

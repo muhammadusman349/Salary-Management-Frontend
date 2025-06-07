@@ -17,7 +17,9 @@ import {
   Dashboard, 
   People, 
   AttachMoney,
-  Schedule 
+  Schedule,
+  Business,
+  Work
 } from '@mui/icons-material';
 import { useState } from 'react';
 
@@ -25,7 +27,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const isAuthenticated = !!localStorage.getItem('access_token');
-  const userRole = localStorage.getItem('user_role') || 'employee';
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,7 +39,6 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user_role');
     navigate('/login');
     handleMenuClose();
   };
@@ -68,6 +68,27 @@ const Navbar = () => {
             >
               Dashboard
             </Button>
+            
+            <Button 
+              color="inherit" 
+              startIcon={<Business />} 
+              component={Link} 
+              to="/departments"
+              sx={{ mr: 2 }}
+            >
+              Departments
+            </Button>
+            
+            <Button 
+              color="inherit" 
+              startIcon={<Work />} 
+              component={Link} 
+              to="/positions"
+              sx={{ mr: 2 }}
+            >
+              Positions
+            </Button>
+            
             <Button 
               color="inherit" 
               startIcon={<People />} 
@@ -77,6 +98,7 @@ const Navbar = () => {
             >
               Employees
             </Button>
+            
             <Button 
               color="inherit" 
               startIcon={<Schedule />} 
@@ -127,15 +149,15 @@ const Navbar = () => {
               >
                 <AccountCircle sx={{ mr: 1 }} /> My Profile
               </MenuItem>
-              {userRole === 'admin' && (
-                <MenuItem 
-                  component={Link} 
-                  to="/admin" 
-                  onClick={handleMenuClose}
-                >
-                  <People sx={{ mr: 1 }} /> Admin Panel
-                </MenuItem>
-              )}
+              
+              <MenuItem 
+                component={Link} 
+                to="/admin" 
+                onClick={handleMenuClose}
+              >
+                <People sx={{ mr: 1 }} /> Admin Panel
+              </MenuItem>
+              
               <Divider />
               <MenuItem onClick={handleLogout}>
                 <Logout sx={{ mr: 1 }} /> Logout
