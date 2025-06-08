@@ -19,7 +19,8 @@ import {
   AttachMoney,
   Schedule,
   Business,
-  Work
+  Work,
+  Groups // Alternative icon for Organizations
 } from '@mui/icons-material';
 import { useState } from 'react';
 
@@ -67,6 +68,16 @@ const Navbar = () => {
               sx={{ mr: 2 }}
             >
               Dashboard
+            </Button>
+            
+            <Button 
+              color="inherit" 
+              startIcon={<Groups />} 
+              component={Link} 
+              to="/organizations"
+              sx={{ mr: 2 }}
+            >
+              Organizations
             </Button>
             
             <Button 

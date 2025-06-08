@@ -37,3 +37,61 @@ export const PositionService = {
   }
   
 };
+
+export const OrganizationService = {
+  getOrganizations: async () => {
+    return await api.get('/organizations/');
+  },
+  
+  getOrganization: async (id) => {
+    return await api.get(`/organizations/${id}/`);
+  },
+  
+  createOrganization: async (data) => {
+    return await api.post('/organizations/', data);
+  },
+  
+  updateOrganization: async (id, data) => {
+    return await api.put(`/organizations/${id}/`, data);
+  },
+  
+  patchOrganization: async (id, data) => {
+    return await api.patch(`/organizations/${id}/`, data);
+  },
+  
+  deleteOrganization: async (id) => {
+    return await api.delete(`/organizations/${id}/`);
+  },
+  
+  // Additional methods for organization-specific relationships
+  addEmployeeToOrganization: async (organizationId, employeeId) => {
+    return await api.post(`/organizations/${organizationId}/employees/`, { employee_id: employeeId });
+  },
+  
+  removeEmployeeFromOrganization: async (organizationId, employeeId) => {
+    return await api.delete(`/organizations/${organizationId}/employees/${employeeId}/`);
+  },
+  
+  setOrganizationAdmin: async (organizationId, userId) => {
+    return await api.patch(`/organizations/${organizationId}/`, { admin: userId });
+  }
+};
+
+
+export const EmployeeService = {
+  getEmployees: async () => {
+    return await api.get('/employees/');
+  },
+  getEmployee: async (id) => {
+    return await api.get(`/employees/${id}/`);
+  },
+  createEmployee: async (data) => {
+    return await api.post('/employees/', data);
+  },
+  updateEmployee: async (id, data) => {
+    return await api.put(`/employees/${id}/`, data);
+  },
+  deleteEmployee: async (id) => {
+    return await api.delete(`/employees/${id}/`);
+  }
+};

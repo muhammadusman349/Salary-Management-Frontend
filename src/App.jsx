@@ -12,6 +12,8 @@ import DepartmentPage from './pages/DepartmentPage';
 import PositionPage from './pages/PositionPage';
 import PositionDetail from './components/Employee/PositionDetail';
 import DepartmentDetail from './components/Employee/DepartmentDetail';
+import OrganizationsPage from './pages/OrganizationsPage';
+import OrganizationsDetails from './components/Employee/OrganizationsDetails';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
           <Route path="/departments/:id" element={<DepartmentDetail />} />
           <Route path="/positions" element={<PositionPage />} />
           <Route path="/positions/:id" element={<PositionDetail />} />
+          <Route path="/organizations" element={<OrganizationsPage />} />
+          <Route path="/organizations/:id" element={<OrganizationsDetails />} />
         </Route>
       </Routes>
     </div>
